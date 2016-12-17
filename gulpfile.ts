@@ -2,10 +2,10 @@
 
 const gulp = require("gulp");
 const del = require("del");
+const sourceMaps = require('gulp-sourcemaps');
 const tsc = require("gulp-typescript");
-const sourcemaps = require('gulp-sourcemaps');
 const tsProject = tsc.createProject("tsconfig.json");
-const tslint = require('gulp-tslint');
+const tsLint = require('gulp-tslint');
 const sass = require('gulp-sass');
 
 /**
@@ -20,10 +20,10 @@ gulp.task('clean', (cb) => {
  */
 gulp.task('tslint', () => {
   return gulp.src("src/**/*.ts")
-    .pipe(tslint({
+    .pipe(tsLint({
       formatter: 'prose'
     }))
-    .pipe(tslint.report());
+    .pipe(tsLint.report());
 });
 
 /**
@@ -31,11 +31,11 @@ gulp.task('tslint', () => {
  */
 gulp.task("compile", ["tslint"], () => {
   let tsResult = gulp.src("src/**/*.ts")
-    .pipe(sourcemaps.init())
+    .pipe(sourceMaps.init())
     .pipe(tsProject(tsProject));
 
   return tsResult.js
-    .pipe(sourcemaps.write(".", { sourceRoot: '/src' }))
+    .pipe(sourceMaps.write(".", { sourceRoot: '/src' }))
     .pipe(gulp.dest("build"));
 });
 
@@ -61,16 +61,18 @@ gulp.task("resources", () => {
  */
 gulp.task("libs", () => {
   let libs = [
-    'core-js/client/shim.min.js',
-    'systemjs/dist/system-polyfills.js',
-    'systemjs/dist/system.src.js',
-    'reflect-metadata/Reflect.js',
-    'rxjs/**/*.js',
-    'zone.js/dist/**',
-    '@angular/**/bundles/**',
-    'jquery/dist/jquery.min.js',
-    'bootstrap/dist/css/bootstrap.min.css',
-    'bootstrap/dist/js/bootstrap.min.js'
+      'core-js/client/shim.min.js',
+      'systemjs/dist/system-polyfills.js',
+      'systemjs/dist/system.src.js',
+      'reflect-metadata/Reflect.js',
+      'rxjs/**/*.js',
+      'zone.js/dist/**',
+      '@angular/**/bundles/**',
+      'jquery/dist/jquery.min.js',
+      'tether/dist/css/tether.min.css',
+      'tether/dist/js/tether.min.js',
+      'bootstrap/dist/css/bootstrap.min.css',
+      'bootstrap/dist/js/bootstrap.min.js'
   ];
 
   return gulp

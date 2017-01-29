@@ -1,0 +1,49 @@
+#!/usr/bin/env node
+/**
+ * @author Francisco Costa <jfcpcosta@gmail.com>
+ * @version 0.0.1
+ */
+
+"use strict";
+
+const vfs = require('vinyl-fs');
+const chalk = require('chalk');
+const fs = require('fs');
+const chokidar = require('chokidar');
+
+console.log(chalk.yellow("[START BUILDING PROJECT]"));
+
+vfs.src([
+    "src/**/*", 
+    "!**/*.ts", 
+    "!**/*.scss"
+]).pipe(vfs.dest("build"));
+
+console.log(chalk.green("[BUILD COMPLETE]"));
+
+process.argv.slice(2).forEach(function (val, index, array) {
+  if (val == "--watch") {
+    console.log(chalk.yellow("[START WATCHING FILE CHANGES]"));
+
+    chokidar.watch([
+        "src/**/*", 
+        "!**/*.ts", 
+        "!**/*.scss"
+    ]).on('all', (event, path) => {
+        switch(event) {
+            case "add":
+                fs.createReadStream(path).pipe(fs.createWriteStream(path.replace("src", "build")));
+                console.log(chalk.green("+ RESOURCE [" + path + "]"));
+                break;
+            case "change":
+                fs.createReadStream(path).pipe(fs.createWriteStream(path.replace("src", "build")));
+                console.log(chalk.yellow("+ RESOURCE [" + path + "]"));
+                break;
+            case "unlink":
+                fs.unlinkSync(path.replace("src", "build"));
+                console.log(chalk.red("- RESOURCE [" + path + "]"));
+                break;
+        }
+    });
+  }
+});

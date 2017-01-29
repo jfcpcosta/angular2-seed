@@ -3,10 +3,24 @@
   "version": "1.0.0",
   "description": "Skeleton with Angular 2 with TypeScript compiling, Bootstrap 4, SASS Compiling",
   "scripts": {
-    "clean": "gulp clean",
-    "compile": "gulp compile",
-    "build": "gulp build",
-    "start": "concurrently --kill-others \"gulp watch\" \"lite-server\"",
+    "clean": "rimraf ./build && mkdir build",
+    "compile": "concurrently 'npm run lint' 'npm run tsc' 'npm run sass'",
+    "watch": "concurrently --kill-others 'npm run tsc:w' 'npm run sass:w' 'npm run resources:w'",
+    "prebuild": "npm run clean",
+    "build": "concurrently 'npm run tsc' 'npm run sass' 'npm run resources' 'npm run libs'",
+    "resources": "node .bin/resources",
+    "resources:w": "node .bin/resources --watch",
+    "libs": "node .bin/libs",
+    "tsc": "tsc",
+    "tsc:w": "tsc -w",
+    "sass": "sass --update src:build",
+    "sass:w": "sass --watch src:build",
+    "server": "lite-server",
+    "lint": "node_modules/.bin/tslint -c tslint.json 'src/**/*.ts'",
+    "security-check": "nsp check",
+    "test": "",
+    "test:w": "",
+    "start": "concurrently 'npm run security-check' 'npm run build' 'npm run watch' 'npm run server'",
     "postinstall": "typings install"
   },
   "author": "Francisco Costa <jfcpcosta@gmail.com>",
@@ -31,17 +45,14 @@
     "zone.js": "^0.7.2"
   },
   "devDependencies": {
+    "chalk": "^1.1.3",
+    "chokidar": "^1.6.1",
     "concurrently": "^3.1.0",
-    "del": "^2.2.2",
-    "gulp": "^3.9.1",
-    "gulp-sass": "^3.0.0",
-    "gulp-sourcemaps": "^1.9.1",
-    "gulp-tslint": "^7.0.1",
-    "gulp-typescript": "^3.1.3",
     "lite-server": "^2.2.2",
     "ts-node": "^1.7.2",
     "tslint": "^4.0.2",
     "typescript": "^2.1.4",
-    "typings": "^2.0.0"
+    "typings": "^2.0.0",
+    "vinyl-fs": "^2.4.4"
   }
 }

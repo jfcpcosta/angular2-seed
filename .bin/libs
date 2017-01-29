@@ -1,0 +1,31 @@
+#!/usr/bin/env node
+/**
+ * @author Francisco Costa <jfcpcosta@gmail.com>
+ * @version 0.0.1
+ */
+
+"use strict";
+
+const vfs = require('vinyl-fs');
+const chalk = require('chalk');
+
+let libs = [
+    'node_modules/**/core-js/client/shim.min.js',
+    'node_modules/**/systemjs/dist/system-polyfills.js',
+    'node_modules/**/systemjs/dist/system.src.js',
+    'node_modules/**/reflect-metadata/Reflect.js',
+    'node_modules/**/rxjs/**/*.js',
+    'node_modules/**/zone.js/dist/**',
+    'node_modules/**/@angular/**/bundles/**',
+    'node_modules/**/jquery/dist/jquery.min.js',
+    'node_modules/**/tether/dist/css/tether.min.css',
+    'node_modules/**/tether/dist/js/tether.min.js',
+    'node_modules/**/bootstrap/dist/css/bootstrap.min.css',
+    'node_modules/**/bootstrap/dist/js/bootstrap.min.js'
+];
+
+console.log(chalk.yellow("[COPYING LIBS]"));
+
+vfs.src(libs).pipe(vfs.dest("build/lib"));
+
+console.log(chalk.green("[COPYING LIBS COMPLETE]"));

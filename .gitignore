@@ -124,3 +124,4 @@ typings
 .idea
 build
 node_modules
+.vscode
